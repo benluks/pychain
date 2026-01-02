@@ -9,8 +9,8 @@ OPENFST_VERSION ?= 1.7.2
 # Default features configured for OpenFST; can be overridden in the make command line.
 OPENFST_COMFIGURE ?= --enable-static --enable-shared --enable-ngram-fsts
 
-CPPFLAGS ?= -D_GLIBCXX_USE_CXX11_ABI=0
-CXXFLAGS ?= -D_GLIBCXX_USE_CXX11_ABI=0
+CPPFLAGS ?= -D_GLIBCXX_USE_CXX11_ABI=1
+CXXFLAGS ?= -D_GLIBCXX_USE_CXX11_ABI=1
 
 .PHONY: all clean
 
@@ -49,6 +49,14 @@ endif
 openfst-$(OPENFST_VERSION)/Makefile: openfst-$(OPENFST_VERSION)
 	cd openfst-$(OPENFST_VERSION)/ && \
 	 ./configure --prefix=`pwd` $(OPENFST_CONFIGURE) CXX="$(CXX)" CPPFLAGS="$(CPPFLAGS)" CXXFLAGS="$(CXXFLAGS) $(openfst_add_CXXFLAGS)" LDFLAGS="$(LDFLAGS)" LIBS="-ldl"
+
+openfst-$(OPENFST_VERSION)/Makefile: openfst-$(OPENFST_VERSION)
+	cd openfst-$(OPENFST_VERSION) && \
+	 ./configure --prefix=`pwd` $(OPENFST_CONFIGURE) \
+	   CXX="$(CXX)" CPPFLAGS="$(CPPFLAGS)" CXXFLAGS="$(CXXFLAGS) $(openfst_add_CXXFLAGS)" \
+	   LDFLAGS="$(LDFLAGS)" LIBS="-ldl" && \
+	 sed -i 's/-D_GLIBCXX_USE_CXX11_ABI=0/-D_GLIBCXX_USE_CXX11_ABI=1/g' Makefile
+
 
 openfst-$(OPENFST_VERSION): openfst-$(OPENFST_VERSION).tar.gz
 	tar xozf openfst-$(OPENFST_VERSION).tar.gz

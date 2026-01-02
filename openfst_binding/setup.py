@@ -1,4 +1,5 @@
 from setuptools import setup
+import torch
 from torch.utils.cpp_extension import CppExtension, BuildExtension
 import os
 
@@ -14,6 +15,9 @@ if not os.path.exists(os.path.join(openfst_path, "lib", "libfst.so")):
         "root directory".format(openfst_path)
     )
 
+openfst_lib = os.path.join(openfst_path, "lib")
+torch_lib = os.path.join(os.path.dirname(torch.__file__), "lib")
+
 setup(
     name="simplefst",
     ext_modules=[
@@ -26,7 +30,8 @@ setup(
         )
     ],
     extra_link_args=[
-        f"-Wl,-rpath,{os.path.join(openfst_path, 'lib')}",
+        f"-Wl,-rpath,{openfst_lib}",
+        f"-Wl,-rpath,{torch_lib}",
     ],
     cmdclass={"build_ext": BuildExtension},
 )

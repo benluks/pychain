@@ -1,0 +1,1 @@
+rm -rf openfst openfst-* */{build,dist,*.egg-info}
