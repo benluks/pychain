@@ -8,15 +8,25 @@ if "OPENFST_PATH" in os.environ:
     openfst_path = os.environ["OPENFST_PATH"]
 
 if not os.path.exists(os.path.join(openfst_path, "lib", "libfst.so")):
-    raise SystemExit("Could not find libfst.so in {}.\n"
-                     "Install openfst and set OPENFST_PATH to the openfst "
-                     "root directory".format(openfst_path))
+    raise SystemExit(
+        "Could not find libfst.so in {}.\n"
+        "Install openfst and set OPENFST_PATH to the openfst "
+        "root directory".format(openfst_path)
+    )
 
-setup(name='simplefst',
-      ext_modules=[CppExtension('simplefst', ['src/fstext.cc'],
-                                include_dirs=['src', os.path.join(
-                                    openfst_path, 'include')],
-                                library_dirs=[os.path.join(
-                                    openfst_path, 'lib')],
-                                libraries=['fst', 'fstscript'])],
-      cmdclass={'build_ext': BuildExtension})
+setup(
+    name="simplefst",
+    ext_modules=[
+        CppExtension(
+            "simplefst",
+            ["src/fstext.cc"],
+            include_dirs=["src", os.path.join(openfst_path, "include")],
+            library_dirs=[os.path.join(openfst_path, "lib")],
+            libraries=["fst", "fstscript"],
+        )
+    ],
+    extra_link_args=[
+        f"-Wl,-rpath,{os.path.join(openfst_path, 'lib')}",
+    ],
+    cmdclass={"build_ext": BuildExtension},
+)

@@ -1,10 +1,10 @@
-CXX ?= g++
+CXX ?= g++-10
 
 WGET ?= wget
 
 # Note: OpenFst requires a relatively recent C++ compiler with C++11 support,
 # e.g. g++ >= 4.7, Apple clang >= 5.0 or LLVM clang >= 3.3.
-OPENFST_VERSION ?= 1.7.5
+OPENFST_VERSION ?= 1.7.2
 
 # Default features configured for OpenFST; can be overridden in the make command line.
 OPENFST_COMFIGURE ?= --enable-static --enable-shared --enable-ngram-fsts
@@ -61,5 +61,9 @@ openfst-$(OPENFST_VERSION).tar.gz:
 pychain:
 	export OPENFST_PATH=`pwd`/openfst && \
 	export LD_LIBRARY_PATH=`pwd`/openfst/lib:$$LD_LIBRARY_PATH && \
-	cd openfst_binding && python3 setup.py install && \
-	cd ../pytorch_binding && python3 setup.py install
+	export CC=gcc-10 && \
+	export CXX=g++-10 && \
+	cd openfst_binding && \
+	uv pip install . --no-build-isolation && \
+	cd ../pytorch_binding && \
+	uv pip install . --no-build-isolation
