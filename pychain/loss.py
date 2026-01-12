@@ -20,7 +20,7 @@ import logging
 import torch
 import torch.nn as nn
 
-from pychain.graph import ChainGraphBatch
+from .graph import ChainGraphBatch
 import pychain_C
 
 
